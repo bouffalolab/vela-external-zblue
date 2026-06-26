@@ -1628,11 +1628,11 @@ int bt_setup_public_id_addr(struct bt_dev *hdev)
 		return 0;
 	}
 
+#if defined(CONFIG_BT_PRIVACY)
 	if (!irk_is_empty(hdev->irk[BT_ID_DEFAULT])) {
 		irk = hdev->irk[BT_ID_DEFAULT];
 	}
 
-#if defined(CONFIG_BT_PRIVACY)
 	uint8_t ir_irk[16];
 	uint8_t ir[16];
 
