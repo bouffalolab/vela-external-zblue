@@ -425,6 +425,7 @@ static int cmd_init(const struct shell *shell, size_t argc, char *argv[])
 	err = bt_enable(NULL);
 	if (err) {
 		shell_error(shell, "bt init failed err: %d", err);
+		return err;
 	}
 
 	ctx_shell = shell;
