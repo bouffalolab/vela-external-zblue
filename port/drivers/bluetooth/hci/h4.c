@@ -455,13 +455,23 @@ static int h4_init(const struct device *dev)
 
 #define DT_HCI_INST(node, inst) DT_CAT(node, inst)
 
+/* Without CONFIG_PTHREAD_MUTEX_TYPES NuttX has no recursive mutex. */
+
+#ifdef PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+#define H4_MUTEX_INITIALIZER PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+#else
+#define H4_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
+#endif
+
 #define H4_DEVICE_INIT(inst)                                                                       \
 	static struct h4_data h4_data_##inst = {                                                   \
 		.fd = -1,                                                                             \
-		.mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP,                                   \
+		.mutex = H4_MUTEX_INITIALIZER,                                                     \
 	};                                                                                         \
 	DEVICE_DT_DEFINE(DT_HCI_INST(DT_DRV_INST(inst), inst), h4_init, NULL, &h4_data_##inst, NULL, POST_KERNEL,             \
 			      CONFIG_KERNEL_INIT_PRIORITY_DEVICE, &h4_drv_api)
 
 H4_DEVICE_INIT(0);
+#if defined(CONFIG_BT_MC_DEVICE_INST)
 H4_DEVICE_INIT(1);
+#endif /* CONFIG_BT_MC_DEVICE_INST */
