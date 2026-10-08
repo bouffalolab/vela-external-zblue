@@ -4507,7 +4507,9 @@ int bt_conn_init(struct bt_dev *hdev)
 
 	bt_att_init(hdev);
 
+#if defined(CONFIG_BT_ECC)
 	bt_ecc_init(hdev);
+#endif /* CONFIG_BT_ECC */
 
 	err = bt_smp_init(hdev);
 	if (err) {
